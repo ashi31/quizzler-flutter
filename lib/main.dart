@@ -33,6 +33,15 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
+  List<Icon> scoreKeeper = [];
+  List<String> questions = [
+    "You can lead a cow downstairs but not upstairs",
+    "Approximately one quarter of human bones are in the feet",
+    "A slug\'s blood is green"
+  ];
+  List<bool> answers = [false, true, true];
+  int questionNumber = 0;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -45,7 +54,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: const EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                'This is where the question text will go',
+                questions[questionNumber],
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -63,13 +72,19 @@ class _QuizPageState extends State<QuizPage> {
             child: FlatButton(
               textColor: Colors.white,
               child: Text(
-                'Wrong',
+                'True',
                 style: TextStyle(
                   fontSize: 25.0,
                 ),
               ),
-              color: Colors.red,
-              onPressed: () {},
+              color: Colors.green,
+              onPressed: () {
+                bool correctAnswer = answers[questionNumber];
+                if (correctAnswer == true) {}
+                setState(() {
+                  questionNumber++;
+                });
+              },
             ),
           ),
         ),
@@ -81,16 +96,28 @@ class _QuizPageState extends State<QuizPage> {
             child: FlatButton(
               textColor: Colors.white,
               child: Text(
-                'Right',
+                'False',
                 style: TextStyle(
                   fontSize: 25.0,
                 ),
               ),
-              color: Colors.green,
-              onPressed: () {},
+              color: Colors.red,
+              onPressed: () {
+                bool correctAnswer = answers[questionNumber];
+                if (correctAnswer == false) {}
+                setState(() {
+                  questionNumber++;
+                });
+              },
             ),
           ),
-        )
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
+          child: Row(
+            children: scoreKeeper,
+          ),
+        ),
       ],
     );
   }
