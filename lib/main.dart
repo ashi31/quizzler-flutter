@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 import 'quiz_brain.dart';
 
@@ -38,6 +39,48 @@ class QuizPage extends StatefulWidget {
 class _QuizPageState extends State<QuizPage> {
   List<Icon> scoreKeeper = [];
 
+  void checkAnswer(bool answerPressed) {
+    bool correctAnswer = quizBrain.getAnswer();
+    setState(() {
+      if (quizBrain.isFinished()) {
+        Alert(
+            context: context,
+            title: "The End",
+            buttons: [
+              DialogButton(
+                child: Text(
+                  "Restart",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                onPressed: () {
+                  setState(() {
+                    quizBrain.reset();
+                    scoreKeeper.clear();
+                  });
+                  Navigator.of(context).pop();
+                },
+                width: 120,
+              )
+            ],
+            style: AlertStyle(isCloseButton: false))
+            .show();
+      } else {
+        if (correctAnswer == answerPressed) {
+          scoreKeeper.add(Icon(
+            Icons.check,
+            color: Colors.green,
+          ));
+        } else {
+          scoreKeeper.add(Icon(
+            Icons.close,
+            color: Colors.red,
+          ));
+        }
+      }
+      quizBrain.nextQuestion();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -75,11 +118,7 @@ class _QuizPageState extends State<QuizPage> {
               ),
               color: Colors.green,
               onPressed: () {
-                bool correctAnswer = quizBrain.getAnswer();
-                if (correctAnswer == true) {}
-                setState(() {
-                  quizBrain.nextQuestion();
-                });
+                checkAnswer(true);
               },
             ),
           ),
@@ -99,11 +138,7 @@ class _QuizPageState extends State<QuizPage> {
               ),
               color: Colors.red,
               onPressed: () {
-                bool correctAnswer = quizBrain.getAnswer();
-                if (correctAnswer == false) {}
-                setState(() {
-                  quizBrain.nextQuestion();
-                });
+                checkAnswer(false);
               },
             ),
           ),
